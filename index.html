@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +13,13 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
             padding: 20px;
         }
@@ -347,6 +352,16 @@
             box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
         }
 
+        .course-item.hidden-course {
+            opacity: 0.5;
+            border-style: dashed;
+        }
+
+        .course-name.hidden-text {
+            text-decoration: line-through;
+            font-style: italic;
+        }
+
         .course-item:last-child {
             margin-bottom: 0;
         }
@@ -374,6 +389,118 @@
             border-radius: 4px;
             font-size: 11px;
             font-style: italic;
+        }
+
+        .permission-badges {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .permission-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .autoroll-badge {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .rollover-badge {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .tutor-badge {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+
+
+
+        .validation-warnings {
+            margin-left: 74px;
+            margin-top: 5px;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .warning-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+
+        .error-badge {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #ef4444;
+        }
+
+        .info-badge {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #3b82f6;
+        }
+
+        .category-content.has-warnings {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .category-content.has-errors {
+            border-left: 4px solid #ef4444;
+        }
+
+        .color-scheme-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .branding-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .branding-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            margin-top: 5px;
         }
 
         .course-actions {
@@ -503,6 +630,12 @@
             display: flex;
             gap: 10px;
             justify-content: flex-end;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 20px;
         }
 
         .modal-btn {
@@ -535,6 +668,8 @@
 
         .detail-modal .modal-content {
             max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .detail-form {
@@ -622,6 +757,7 @@
                 <button class="btn-info" onclick="expandAll()">📂 Expand All</button>
                 <button class="btn-info" onclick="collapseAll()">📁 Collapse All</button>
                 <button class="btn-info" onclick="window.print()">🖨️ Print</button>
+                <button class="btn-info" onclick="showSettingsModal()">⚙️ Settings</button>
             </div>
             <div class="divider"></div>
             <div class="control-section">
@@ -676,6 +812,9 @@ let categories = [
         notes: '',
         courses: [],
         showCourses: false,
+        autorollUsers: [],
+        rolloverUsers: [],
+        tutors: [],
         children: [
             {
                 id: 2,
@@ -687,6 +826,9 @@ let categories = [
                 notes: '',
                 courses: [],
                 showCourses: false,
+                autorollUsers: [],
+                rolloverUsers: [],
+                tutors: [],
                 children: []
             },
             {
@@ -699,9 +841,12 @@ let categories = [
                 notes: '',
                 courses: [],
                 showCourses: false,
+                autorollUsers: [],
+                rolloverUsers: [],
+                tutors: [],
                 children: [
-                    { id: 4, name: 'Bachelor in IT', level: 3, visible: true, code: '', notes: '', courses: [], showCourses: false },
-                    { id: 5, name: 'Certificate in IT', level: 3, visible: true, code: '', notes: '', courses: [], showCourses: false }
+                    { id: 4, name: 'Bachelor in IT', level: 3, visible: true, code: '', notes: '', courses: [], showCourses: false, autorollUsers: [], rolloverUsers: [], tutors: [] },
+                    { id: 5, name: 'Certificate in IT', level: 3, visible: true, code: '', notes: '', courses: [], showCourses: false, autorollUsers: [], rolloverUsers: [], tutors: [] }
                 ]
             },
             {
@@ -714,6 +859,9 @@ let categories = [
                 notes: '',
                 courses: [],
                 showCourses: false,
+                autorollUsers: [],
+                rolloverUsers: [],
+                tutors: [],
                 children: []
             }
         ]
@@ -724,6 +872,9 @@ let nextId = 7;
 let editingId = null;
 let draggedElement = null;
 let searchQuery = '';
+let currentColorScheme = 'default';
+let schoolName = '';
+let schoolLogo = '';
 
 function autoSave() {
     try {
@@ -764,6 +915,74 @@ function triggerAutoSave() {
     render();
 }
 
+function validateCategory(category) {
+    const warnings = [];
+    
+    // Check for empty categories
+    if (category.courses.length === 0 && (!category.children || category.children.length === 0)) {
+        warnings.push({ type: 'warning', message: 'No courses or subcategories' });
+    }
+    
+    // Check for missing tutors when courses exist
+    if (category.courses.length > 0 && (!category.tutors || category.tutors.length === 0)) {
+        warnings.push({ type: 'warning', message: 'Courses but no tutors assigned' });
+    }
+    
+    // Check for duplicate course codes
+    const courseCodes = category.courses.map(c => c.code).filter(code => code);
+    const duplicateCodes = courseCodes.filter((code, index) => courseCodes.indexOf(code) !== index);
+    if (duplicateCodes.length > 0) {
+        warnings.push({ type: 'error', message: `Duplicate course codes: ${duplicateCodes.join(', ')}` });
+    }
+    
+    // Check for missing auto-enroll when courses exist
+    if (category.courses.length > 0 && (!category.autorollUsers || category.autorollUsers.length === 0)) {
+        warnings.push({ type: 'info', message: 'Consider adding auto-enroll users' });
+    }
+    
+    return warnings;
+}
+
+
+
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    const colors = {
+        info: '#3b82f6',
+        success: '#10b981',
+        warning: '#f59e0b',
+        error: '#ef4444'
+    };
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${colors[type]};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 1000;
+        font-weight: 600;
+        animation: slideIn 0.3s ease-out;
+        max-width: 400px;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideIn 0.3s ease-out reverse';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                document.body.removeChild(notification);
+            }
+        }, 300);
+    }, 4000);
+}
+
 function render() {
     const container = document.getElementById('categories');
     container.innerHTML = '';
@@ -771,6 +990,7 @@ function render() {
         container.appendChild(createCategoryElement(cat));
     });
 }
+
 
 function createCategoryElement(category) {
     const div = document.createElement('div');
@@ -788,6 +1008,7 @@ function createCategoryElement(category) {
     if (searchQuery && !matchesSearch(category)) {
         content.classList.add('filtered-out');
     }
+
 
     content.ondragstart = (e) => {
         draggedElement = { id: category.id, level: category.level };
@@ -912,7 +1133,10 @@ function createCategoryElement(category) {
     content.appendChild(actions);
     div.appendChild(content);
 
-    if ((category.code || category.notes || category.courses.length > 0) && editingId !== category.id) {
+    if ((category.code || category.notes || category.courses.length > 0 || 
+         (category.autorollUsers && category.autorollUsers.length > 0) || 
+         (category.rolloverUsers && category.rolloverUsers.length > 0) || 
+         (category.tutors && category.tutors.length > 0)) && editingId !== category.id) {
         const details = document.createElement('div');
         details.className = 'category-details';
         
@@ -926,7 +1150,7 @@ function createCategoryElement(category) {
         if (category.notes) {
             const notes = document.createElement('span');
             notes.className = 'category-notes';
-            notes.textContent = `📌 ${category.notes}`;
+            notes.textContent = `📝 ${category.notes}`;
             details.appendChild(notes);
         }
 
@@ -938,9 +1162,32 @@ function createCategoryElement(category) {
             courseCount.onclick = () => toggleExpand(category.id);
             details.appendChild(courseCount);
         }
+
+        // Add permission badges inline with other details
+        if (category.autorollUsers && category.autorollUsers.length > 0) {
+            const autorollBadge = document.createElement('span');
+            autorollBadge.className = 'permission-badge autoroll-badge';
+            autorollBadge.textContent = `Auto-enroll: ${category.autorollUsers.join(', ')}`;
+            details.appendChild(autorollBadge);
+        }
+        
+        if (category.rolloverUsers && category.rolloverUsers.length > 0) {
+            const rolloverBadge = document.createElement('span');
+            rolloverBadge.className = 'permission-badge rollover-badge';
+            rolloverBadge.textContent = `Rollover: ${category.rolloverUsers.join(', ')}`;
+            details.appendChild(rolloverBadge);
+        }
+        
+        if (category.tutors && category.tutors.length > 0) {
+            const tutorBadge = document.createElement('span');
+            tutorBadge.className = 'permission-badge tutor-badge';
+            tutorBadge.textContent = `Tutors: ${category.tutors.join(', ')}`;
+            details.appendChild(tutorBadge);
+        }
         
         div.appendChild(details);
     }
+
 
     // Show courses if expanded (for all levels)
     if (category.expanded && (category.showCourses || category.courses.length > 0)) {
@@ -951,6 +1198,9 @@ function createCategoryElement(category) {
             category.courses.forEach(course => {
                 const courseItem = document.createElement('div');
                 courseItem.className = 'course-item';
+                if (!category.visible) {
+                    courseItem.classList.add('hidden-course');
+                }
                 courseItem.draggable = true;
                 courseItem.dataset.courseId = course.id;
 
@@ -992,6 +1242,7 @@ function createCategoryElement(category) {
 
                 // Drag handle for courses
                 const courseDragHandle = document.createElement('span');
+                courseDragHandle.className = 'drag-handle';
                 courseDragHandle.style.cssText = 'cursor: grab; color: #999; font-size: 14px; margin-right: 5px;';
                 courseDragHandle.innerHTML = '⋮⋮';
                 courseDragHandle.title = 'Drag to reorder';
@@ -999,6 +1250,9 @@ function createCategoryElement(category) {
                 
                 const courseName = document.createElement('span');
                 courseName.className = 'course-name';
+                if (!category.visible) {
+                    courseName.classList.add('hidden-text');
+                }
                 courseName.textContent = course.name;
                 courseItem.appendChild(courseName);
                 
@@ -1012,9 +1266,17 @@ function createCategoryElement(category) {
                 if (course.notes) {
                     const courseNotes = document.createElement('span');
                     courseNotes.className = 'course-notes-badge';
-                    courseNotes.textContent = course.notes;
+                    courseNotes.textContent = `📝 ${course.notes}`;
                     courseItem.appendChild(courseNotes);
                 }
+
+                if (course.tutors && course.tutors.length > 0) {
+                    const courseTutors = document.createElement('span');
+                    courseTutors.className = 'permission-badge tutor-badge';
+                    courseTutors.textContent = `Tutors: ${course.tutors.join(', ')}`;
+                    courseItem.appendChild(courseTutors);
+                }
+
                 
                 const courseActions = document.createElement('div');
                 courseActions.className = 'course-actions';
@@ -1231,6 +1493,9 @@ function addTopLevel() {
         notes: '',
         courses: [],
         showCourses: false,
+        autorollUsers: [],
+        rolloverUsers: [],
+        tutors: [],
         children: []
     });
     triggerAutoSave();
@@ -1253,6 +1518,9 @@ function addChild(parentId, level) {
                         notes: '',
                         courses: [],
                         showCourses: false,
+                        autorollUsers: [],
+                        rolloverUsers: [],
+                        tutors: [],
                         children: []
                     }]
                 };
@@ -1363,9 +1631,48 @@ function showDetailsModal(categoryId) {
     notesInput.placeholder = 'Add notes, course counts, migration plans, etc...';
     notesGroup.appendChild(notesLabel);
     notesGroup.appendChild(notesInput);
+
+    const autorollGroup = document.createElement('div');
+    autorollGroup.className = 'form-group';
+    const autorollLabel = document.createElement('label');
+    autorollLabel.className = 'form-label';
+    autorollLabel.textContent = 'Auto-enroll Users (comma-separated)';
+    const autorollInput = document.createElement('textarea');
+    autorollInput.className = 'form-input form-textarea';
+    autorollInput.value = (targetCategory.autorollUsers || []).join(', ');
+    autorollInput.placeholder = 'Enter usernames or emails, separated by commas';
+    autorollGroup.appendChild(autorollLabel);
+    autorollGroup.appendChild(autorollInput);
+
+    const rolloverGroup = document.createElement('div');
+    rolloverGroup.className = 'form-group';
+    const rolloverLabel = document.createElement('label');
+    rolloverLabel.className = 'form-label';
+    rolloverLabel.textContent = 'Rollover Role Users (comma-separated)';
+    const rolloverInput = document.createElement('textarea');
+    rolloverInput.className = 'form-input form-textarea';
+    rolloverInput.value = (targetCategory.rolloverUsers || []).join(', ');
+    rolloverInput.placeholder = 'Enter usernames or emails, separated by commas';
+    rolloverGroup.appendChild(rolloverLabel);
+    rolloverGroup.appendChild(rolloverInput);
+
+    const tutorsGroup = document.createElement('div');
+    tutorsGroup.className = 'form-group';
+    const tutorsLabel = document.createElement('label');
+    tutorsLabel.className = 'form-label';
+    tutorsLabel.textContent = 'Tutors (comma-separated)';
+    const tutorsInput = document.createElement('textarea');
+    tutorsInput.className = 'form-input form-textarea';
+    tutorsInput.value = (targetCategory.tutors || []).join(', ');
+    tutorsInput.placeholder = 'Enter usernames or emails, separated by commas';
+    tutorsGroup.appendChild(tutorsLabel);
+    tutorsGroup.appendChild(tutorsInput);
     
     form.appendChild(codeGroup);
     form.appendChild(notesGroup);
+    form.appendChild(autorollGroup);
+    form.appendChild(rolloverGroup);
+    form.appendChild(tutorsGroup);
     
     const actions = document.createElement('div');
     actions.className = 'modal-actions';
@@ -1380,7 +1687,10 @@ function showDetailsModal(categoryId) {
     saveBtn.style.background = '#667eea';
     saveBtn.textContent = 'Save';
     saveBtn.onclick = () => {
-        updateCategoryDetails(categoryId, codeInput.value.trim(), notesInput.value.trim());
+        const autorollUsers = autorollInput.value.trim().split(',').map(u => u.trim()).filter(u => u);
+        const rolloverUsers = rolloverInput.value.trim().split(',').map(u => u.trim()).filter(u => u);
+        const tutors = tutorsInput.value.trim().split(',').map(u => u.trim()).filter(u => u);
+        updateCategoryDetails(categoryId, codeInput.value.trim(), notesInput.value.trim(), autorollUsers, rolloverUsers, tutors);
         document.body.removeChild(overlay);
     };
     
@@ -1410,11 +1720,11 @@ function showDetailsModal(categoryId) {
     codeInput.focus();
 }
 
-function updateCategoryDetails(id, code, notes) {
+function updateCategoryDetails(id, code, notes, autorollUsers, rolloverUsers, tutors) {
     const update = (cats) => {
         return cats.map(cat => {
             if (cat.id === id) {
-                return { ...cat, code, notes };
+                return { ...cat, code, notes, autorollUsers, rolloverUsers, tutors };
             }
             if (cat.children) {
                 return { ...cat, children: update(cat.children) };
@@ -1515,10 +1825,23 @@ function showCourseModal(categoryId, courseId = null) {
     notesInput.placeholder = 'e.g., Migrate from old system, 50 students';
     notesGroup.appendChild(notesLabel);
     notesGroup.appendChild(notesInput);
-    
+
+    const tutorsGroup = document.createElement('div');
+    tutorsGroup.className = 'form-group';
+    const tutorsLabel = document.createElement('label');
+    tutorsLabel.className = 'form-label';
+    tutorsLabel.textContent = 'Tutors (comma-separated)';
+    const tutorsInput = document.createElement('textarea');
+    tutorsInput.className = 'form-input form-textarea';
+    tutorsInput.value = (existingCourse && existingCourse.tutors) ? existingCourse.tutors.join(', ') : '';
+    tutorsInput.placeholder = 'Enter usernames or emails, separated by commas';
+    tutorsGroup.appendChild(tutorsLabel);
+    tutorsGroup.appendChild(tutorsInput);
+
     form.appendChild(nameGroup);
     form.appendChild(codeGroup);
     form.appendChild(notesGroup);
+    form.appendChild(tutorsGroup);
     
     const actions = document.createElement('div');
     actions.className = 'modal-actions';
@@ -1538,10 +1861,11 @@ function showCourseModal(categoryId, courseId = null) {
             alert('Course name is required');
             return;
         }
+        const tutors = tutorsInput.value.trim().split(',').map(u => u.trim()).filter(u => u);
         if (isEdit) {
-            updateCourse(categoryId, courseId, name, codeInput.value.trim(), notesInput.value.trim());
+            updateCourse(categoryId, courseId, name, codeInput.value.trim(), notesInput.value.trim(), tutors);
         } else {
-            addCourse(categoryId, name, codeInput.value.trim(), notesInput.value.trim());
+            addCourse(categoryId, name, codeInput.value.trim(), notesInput.value.trim(), tutors);
         }
         document.body.removeChild(overlay);
     };
@@ -1572,7 +1896,7 @@ function showCourseModal(categoryId, courseId = null) {
     nameInput.focus();
 }
 
-function addCourse(categoryId, name, code, notes) {
+function addCourse(categoryId, name, code, notes, tutors) {
     const update = (cats) => {
         return cats.map(cat => {
             if (cat.id === categoryId) {
@@ -1580,7 +1904,8 @@ function addCourse(categoryId, name, code, notes) {
                     id: Date.now(),
                     name: name,
                     code: code,
-                    notes: notes
+                    notes: notes,
+                    tutors: tutors || []
                 };
                 return { ...cat, courses: [...cat.courses, newCourse], showCourses: true };
             }
@@ -1594,12 +1919,12 @@ function addCourse(categoryId, name, code, notes) {
     triggerAutoSave();
 }
 
-function updateCourse(categoryId, courseId, name, code, notes) {
+function updateCourse(categoryId, courseId, name, code, notes, tutors) {
     const update = (cats) => {
         return cats.map(cat => {
             if (cat.id === categoryId) {
                 const updatedCourses = cat.courses.map(course => 
-                    course.id === courseId ? { ...course, name, code, notes } : course
+                    course.id === courseId ? { ...course, name, code, notes, tutors: tutors || [] } : course
                 );
                 return { ...cat, courses: updatedCourses };
             }
@@ -2121,8 +2446,188 @@ function downloadFile(content, filename, mimeType) {
     URL.revokeObjectURL(url);
 }
 
+function showSettingsModal() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay detail-modal';
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal-content';
+    
+    const header = document.createElement('div');
+    header.className = 'modal-header';
+    header.textContent = '⚙️ Settings & Customization';
+    
+    const form = document.createElement('div');
+    form.className = 'detail-form';
+    
+    // Color Scheme Section
+    const colorSection = document.createElement('div');
+    colorSection.className = 'branding-section';
+    colorSection.innerHTML = `
+        <h3 style="margin-bottom: 10px;">🎨 Color Scheme</h3>
+        <div class="color-scheme-selector">
+            <div class="color-option selected" data-scheme="default" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" title="Default"></div>
+            <div class="color-option" data-scheme="blue" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);" title="Blue"></div>
+            <div class="color-option" data-scheme="green" style="background: linear-gradient(135deg, #10b981 0%, #047857 100%);" title="Green"></div>
+            <div class="color-option" data-scheme="purple" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);" title="Purple"></div>
+            <div class="color-option" data-scheme="orange" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);" title="Orange"></div>
+        </div>
+    `;
+    form.appendChild(colorSection);
+    
+    // School Branding Section
+    const brandingSection = document.createElement('div');
+    brandingSection.className = 'branding-section';
+    brandingSection.innerHTML = `
+        <h3 style="margin-bottom: 10px;">🏫 School Branding</h3>
+        <div class="form-group">
+            <label class="form-label">School Name</label>
+            <input type="text" id="schoolNameInput" class="branding-input" placeholder="Enter school name" value="${schoolName}">
+        </div>
+        <div class="form-group">
+            <label class="form-label">School Logo URL (optional)</label>
+            <input type="url" id="schoolLogoInput" class="branding-input" placeholder="https://example.com/logo.png" value="${schoolLogo}">
+        </div>
+    `;
+    form.appendChild(brandingSection);
+    
+    const actions = document.createElement('div');
+    actions.className = 'modal-actions';
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'modal-btn modal-btn-cancel';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.onclick = () => document.body.removeChild(overlay);
+    
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'modal-btn modal-btn-confirm';
+    saveBtn.style.background = '#667eea';
+    saveBtn.textContent = 'Apply Settings';
+    saveBtn.onclick = () => {
+        applySettings();
+        document.body.removeChild(overlay);
+    };
+    
+    actions.appendChild(cancelBtn);
+    actions.appendChild(saveBtn);
+    
+    modal.appendChild(header);
+    modal.appendChild(form);
+    modal.appendChild(actions);
+    overlay.appendChild(modal);
+    
+    // Color scheme selection
+    overlay.querySelectorAll('.color-option').forEach(option => {
+        option.onclick = () => {
+            overlay.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+        };
+    });
+    
+    overlay.onclick = (e) => {
+        if (e.target === overlay) {
+            document.body.removeChild(overlay);
+        }
+    };
+    
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            document.body.removeChild(overlay);
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+    
+    document.body.appendChild(overlay);
+}
+
+function applySettings() {
+    const selectedScheme = document.querySelector('.color-option.selected').dataset.scheme;
+    const schoolNameValue = document.getElementById('schoolNameInput').value;
+    const schoolLogoValue = document.getElementById('schoolLogoInput').value;
+    
+    currentColorScheme = selectedScheme;
+    schoolName = schoolNameValue;
+    schoolLogo = schoolLogoValue;
+    
+    // Apply color scheme
+    applyColorScheme(selectedScheme);
+    
+    // Apply branding
+    if (schoolName) {
+        document.querySelector('h1').textContent = `🎓 ${schoolName} - Category Designer`;
+    }
+    
+    if (schoolLogo) {
+        const logo = document.createElement('img');
+        logo.src = schoolLogo;
+        logo.style.cssText = 'height: 40px; margin-right: 15px; vertical-align: middle;';
+        const header = document.querySelector('h1');
+        header.insertBefore(logo, header.firstChild);
+    }
+    
+    // Save settings
+    localStorage.setItem('moodleDesignerSettings', JSON.stringify({
+        colorScheme: currentColorScheme,
+        schoolName: schoolName,
+        schoolLogo: schoolLogo
+    }));
+}
+
+function applyColorScheme(scheme) {
+    const root = document.documentElement;
+    
+    switch(scheme) {
+        case 'blue':
+            root.style.setProperty('--primary-gradient', 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)');
+            break;
+        case 'green':
+            root.style.setProperty('--primary-gradient', 'linear-gradient(135deg, #10b981 0%, #047857 100%)');
+            break;
+        case 'purple':
+            root.style.setProperty('--primary-gradient', 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)');
+            break;
+        case 'orange':
+            root.style.setProperty('--primary-gradient', 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)');
+            break;
+        default:
+            root.style.setProperty('--primary-gradient', 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)');
+    }
+    
+    document.body.style.background = 'var(--primary-gradient)';
+}
+
+function loadSettings() {
+    try {
+        const saved = localStorage.getItem('moodleDesignerSettings');
+        if (saved) {
+            const settings = JSON.parse(saved);
+            currentColorScheme = settings.colorScheme || 'default';
+            schoolName = settings.schoolName || '';
+            schoolLogo = settings.schoolLogo || '';
+            
+            if (schoolName) {
+                document.querySelector('h1').textContent = `🎓 ${schoolName} - Category Designer`;
+            }
+            
+            if (schoolLogo) {
+                const logo = document.createElement('img');
+                logo.src = schoolLogo;
+                logo.style.cssText = 'height: 40px; margin-right: 15px; vertical-align: middle;';
+                const header = document.querySelector('h1');
+                header.insertBefore(logo, header.firstChild);
+            }
+            
+            applyColorScheme(currentColorScheme);
+        }
+    } catch (e) {
+        console.error('Settings load failed:', e);
+    }
+}
+
 window.addEventListener('load', () => {
     loadAutoSave();
+    loadSettings();
 });
 
 render();
